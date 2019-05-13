@@ -1,6 +1,7 @@
 import { IContext } from './types/i-context';
 import { IAuditTool } from './types/i-audit-tool';
 import { FolderStructureAuditTool } from './folder-structure/folder-structure-audit-tool';
+import { DependenciesGraphAuditTool } from './dependencies-graph/dependencies-graph-audit-tool';
 
 
 export class AuditTool {
@@ -11,7 +12,8 @@ export class AuditTool {
     constructor(context: IContext) {
         this.context = context;
         this.tools = [
-            new FolderStructureAuditTool()
+            // new FolderStructureAuditTool(),
+            new DependenciesGraphAuditTool()
         ]
     }
 

@@ -14,7 +14,11 @@ export class FolderStructureAuditTool implements IAuditTool {
         ];
     }
 
-    run(context: IContext) {
+    /**
+     * Runs every test case declared in testCases variable, consoling it state
+     * @param context the current app context
+     */
+    run(context: IContext): void {
         this.testCases.forEach(test => {
             test.run(context).then(() => { console.log(`${test.description}: OK`) }).catch(e => { console.log(e) });
         });
