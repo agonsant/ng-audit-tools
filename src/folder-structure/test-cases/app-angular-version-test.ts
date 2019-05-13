@@ -18,8 +18,8 @@ export class AppAngularVersionTest implements ITestCase {
     run(context: IContext): Promise<string> {
         return new Promise(resolve => {
             const path = `${context.getWorkspace()}/${this.angularPackagePath}`;
-            const jsonPackage = ToolUtils.getPackageJson(path);
             try {
+                const jsonPackage = ToolUtils.getPackageJson(path);
                 const {version} = jsonPackage;
                 const currentVersion = version.split('.')[0];
                 if(currentVersion >= this.versionRequired) {
