@@ -1,0 +1,38 @@
+{
+  "name": "ng-audit-tools",
+  "version": "0.0.1",
+  "description": "Tools for auditing an Angular Application",
+  "main": "main.ts",
+  "bin": {
+    "ng-audit-tools": "index.js"
+  },
+  "scripts": {
+    "start": "ts-node main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agonsant/ng-audit-tools.git"
+  },
+  "keywords": [
+    "Angular",
+    "Audit",
+    "Tool",
+    "Architecture"
+  ],
+  "author": "Alex Gonzalez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agonsant/ng-audit-tools/issues"
+  },
+  "homepage": "https://github.com/agonsant/ng-audit-tools#readme",
+  "devDependencies": {
+    "@types/node": "^12.0.0",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2"
+  }
+}

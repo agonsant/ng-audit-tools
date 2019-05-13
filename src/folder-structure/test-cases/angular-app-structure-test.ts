@@ -1,32 +1,3 @@
-# ng-audit-tools
-
->Tools for auditing an Angular Application
-
-## Contributing
-
-This is a NodeJS project developed using TypeScript
-
-### Starting the project
-
-```shell
-npm install
-npm start [-- <angular_workspace>]
-```
-
-### Project structure
-
-The project has the following structure
-
-* *audit-tool.ts* the audit runner. It runs all available tools.
-* *context.ts* The audit context. Currently it only has the workspace.
-
-#### Test case
-
-If you want to create a new test case in a tool, you just need to create a class extending from _ITestCase_, and implemented it throwing specific exceptions for the errors.
-
-Example of test case:
-
-```typescript
 import { ITestCase } from '../../types/i-test-case';
 import { IContext } from '../../types/i-context';
 import * as fs from 'fs';
@@ -60,6 +31,5 @@ export class AngularAppStructureTest implements ITestCase {
             });
         });
     }
-}
-```
 
+}
