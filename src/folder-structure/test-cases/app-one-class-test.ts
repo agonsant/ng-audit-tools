@@ -32,7 +32,7 @@ export class AppOneClassTest implements ITestCase {
                     let i = 0;
                     while(validate && i < files.length) {
                         validate = this.hasOneClassAsMax(files[i]);
-                        i += 1;
+                        if (validate) i += 1;
                     }
         
                     if(validate) {
