@@ -1,5 +1,5 @@
 import { ITestCase } from '../types/i-test-case';
-import { AngularAppStructureTest } from './test-cases/angular-app-structure-test';
+import { AppStructureTest } from './test-cases/app-structure-test';
 import { IAuditTool } from '../types/i-audit-tool';
 import { IContext } from '../types/i-context';
 
@@ -10,7 +10,7 @@ export class FolderStructureAuditTool implements IAuditTool {
 
     constructor() {
         this.testCases = [
-            new AngularAppStructureTest()
+            new AppStructureTest()
         ];
     }
 

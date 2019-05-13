@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { FolderStructureException } from '../exceptions/folder-structure-exception';
 
-export class AngularAppStructureTest implements ITestCase {
+export class AppStructureTest implements ITestCase {
 
     description: string;
 

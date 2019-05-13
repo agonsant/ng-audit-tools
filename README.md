@@ -24,6 +24,8 @@ The project has the following structure
 
 If you want to create a new test case in a tool, you just need to create a class extending from _ITestCase_, and implemented it throwing specific exceptions for the errors.
 
+After that include it on its tool.
+
 Example of test case:
 
 ```typescript
@@ -33,7 +35,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { FolderStructureException } from '../exceptions/folder-structure-exception';
 
-export class AngularAppStructureTest implements ITestCase {
+export class AppStructureTest implements ITestCase {
 
     description: string;
 
@@ -62,4 +64,19 @@ export class AngularAppStructureTest implements ITestCase {
     }
 }
 ```
+
+And include it on its tool
+
+```typescript
+export class FolderStructureAuditTool implements IAuditTool {
+
+    private testCases: Array<ITestCase>;
+
+    constructor() {
+        this.testCases = [
+            new AppStructureTest()
+        ];
+    }
+```
+
 
