@@ -3,6 +3,8 @@ import { ToolUtils } from '../../utils/tool-utils';
 import { AngularVersionException } from '../exceptions/angular-version-exception';
 import { IContext } from '../../types/i-context';
 
+import * as path from 'path';
+
 export class AppAngularVersionTest implements ITestCase {
 
     description: string;
@@ -17,18 +19,14 @@ export class AppAngularVersionTest implements ITestCase {
 
     run(context: IContext): Promise<string> {
         return new Promise(resolve => {
-            const path = `${context.getWorkspace()}/${this.angularPackagePath}`;
-            try {
-                const jsonPackage = ToolUtils.getPackageJson(path);
-                const {version} = jsonPackage;
-                const currentVersion = version.split('.')[0];
-                if(currentVersion >= this.versionRequired) {
-                    resolve();
-                } else {
-                    throw new AngularVersionException(`The angular version is smaller than ${this.versionRequired}`, currentVersion);
-                }
-            } catch(err) {
-                throw new AngularVersionException(`The angular version does not exists`);
+            const pathPackage = path.join(context.getWorkspace(), this.angularPackagePath);
+            const jsonPackage = ToolUtils.getPackageJson(pathPackage);
+            const {version} = jsonPackage;
+            const currentVersion = version.split('.')[0];
+            if(currentVersion >= this.versionRequired) {
+                resolve();
+            } else {
+                throw new AngularVersionException(`The angular version is smaller than ${this.versionRequired}`, currentVersion);
             }
         });
     }
