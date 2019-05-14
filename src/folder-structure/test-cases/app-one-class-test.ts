@@ -21,13 +21,13 @@ export class AppOneClassTest implements ITestCase {
     }
 
     run(context: IContext): Promise<string> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const sourceFolder = path.join(context.getWorkspace(), 'src/app');
             const src = `${sourceFolder}/**/*.ts`;
             let validate = true; 
             glob(src, (err: any, files: any) => {
                 if (err) {
-                    throw new OneClassException();
+                    reject(new OneClassException());
                 } else {
                     let i = 0;
                     while(validate && i < files.length) {
@@ -38,7 +38,7 @@ export class AppOneClassTest implements ITestCase {
                     if(validate) {
                         resolve();
                     } else {
-                        throw new OneClassException(`The file ${files[i]} has more than ${this.limitClassPerFile} class/es`);
+                        reject(new OneClassException(`The file ${files[i]} has more than ${this.limitClassPerFile} class/es`));
                     }
                 }
             });

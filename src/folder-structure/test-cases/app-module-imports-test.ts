@@ -18,10 +18,10 @@ export class AppModuleImportsTest implements ITestCase {
         const sourceFolder = path.join(context.getWorkspace(), 'src/app');
         const appModule = `${sourceFolder}/app.module.ts`;
 
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             fs.readdir(sourceFolder, (err, files) => {
                 if (err) {
-                    throw new ModuleImportsException();
+                    reject(new ModuleImportsException());
                 } else {
                     const dirs = files.filter(file => fs.statSync(path.join(sourceFolder, file)).isDirectory());
                     const buffer = fs.readFileSync(appModule, 'utf-8');
@@ -38,9 +38,9 @@ export class AppModuleImportsTest implements ITestCase {
                     if (validate) {
                         resolve();
                     } else if (this.foldersNoImport.includes(dirs[index])){
-                        throw new ModuleImportsException(`App module must not contain the module ${dirs[index]}`);
+                        reject(new ModuleImportsException(`App module must not contain the module ${dirs[index]}`));
                     } else {
-                        throw new ModuleImportsException(`App module must contain the module ${dirs[index]}`);
+                        reject(new ModuleImportsException(`App module must contain the module ${dirs[index]}`));
                     }
                 }
             });

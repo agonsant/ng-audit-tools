@@ -18,7 +18,7 @@ export class AppAngularVersionTest implements ITestCase {
     }
 
     run(context: IContext): Promise<string> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const pathPackage = path.join(context.getWorkspace(), this.angularPackagePath);
             const jsonPackage = ToolUtils.getPackageJson(pathPackage);
             const {version} = jsonPackage;
@@ -26,7 +26,7 @@ export class AppAngularVersionTest implements ITestCase {
             if(currentVersion >= this.versionRequired) {
                 resolve();
             } else {
-                throw new AngularVersionException(`The angular version is smaller than ${this.versionRequired}`, currentVersion);
+                reject(new AngularVersionException(`The angular version is smaller than ${this.versionRequired}`, currentVersion));
             }
         });
     }

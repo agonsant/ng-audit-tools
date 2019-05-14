@@ -15,13 +15,13 @@ export class AppCompodocTest implements ITestCase {
 
     run(context: IContext): Promise<string> {
         const sourceFolder = path.join(context.getWorkspace(), 'package.json');
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const packageJson = ToolUtils.getPackageJson(sourceFolder);
             const compodoc = packageJson.dependencies[this.compodocKey]; 
             if (compodoc) {
                 resolve();
             } else {
-                throw new CompodocException(this.description, compodoc);
+                reject(new CompodocException(this.description, compodoc));
             }
         });
     }

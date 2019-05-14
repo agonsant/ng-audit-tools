@@ -13,7 +13,7 @@ export class AppStructureTest implements ITestCase {
     }
 
     run(context: IContext): Promise<string> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const directoryPath = path.join(context.getWorkspace(), 'src', 'app');
             try {
                 fs.statSync(directoryPath).isDirectory();
@@ -24,9 +24,9 @@ export class AppStructureTest implements ITestCase {
                 if (err) throw new FolderStructureException(err.message, files ? files.join(' ') : '');
                 if (files.length === 3 && files.includes('core') &&
                     files.includes('shared') && files.includes('modules')) {
-                    resolve()
+                    resolve();
                 } else {
-                    throw new FolderStructureException(this.description, files.join(' '));
+                    reject(new FolderStructureException(this.description, files.join(' ')));
                 }
             });
         });

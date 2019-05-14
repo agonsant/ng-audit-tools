@@ -22,13 +22,13 @@ export class AppNumberImportsTest implements ITestCase {
     }
 
     run(context: IContext): Promise<string> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const sourceFolder = path.join(context.getWorkspace(), 'src/app');
             const src = `${sourceFolder}/**/*.module.ts`;
             let validate = true;
             glob(src, (err: any, files: any) => {
                 if (err) {
-                   throw new NumberImportsException();
+                   reject(new NumberImportsException());
                 } else {
                     let i = 0;
                     while(validate && i < files.length) {
@@ -38,7 +38,7 @@ export class AppNumberImportsTest implements ITestCase {
                     if (validate) {
                         resolve();
                     } else {
-                        throw new NumberImportsException(`The module ${files[i]} has more than ${this.limit} imports`);
+                        reject(new NumberImportsException(`The module ${files[i]} has more than ${this.limit} imports`));
                     }
                 }
                 

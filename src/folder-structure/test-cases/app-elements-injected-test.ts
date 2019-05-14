@@ -38,10 +38,10 @@ export class AppElementsInjectedTest implements ITestCase {
     run(context: IContext): Promise<string> {
         const sourceApp = path.join(context.getWorkspace(), 'src/app');
         
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             glob(`${sourceApp}/*/**/!(*.spec).ts`, (err: any, files: any) => {
                 if (err) {
-                    throw new ElementInjectedException();
+                    reject(new ElementInjectedException());
                 } else {
                     const modules = glob.sync(`${sourceApp}/**/*.module.ts`);
                     files.forEach((file: string) => {
@@ -52,7 +52,7 @@ export class AppElementsInjectedTest implements ITestCase {
                             if(!foundImport) index += 1;
                         }
                         if (!foundImport) {
-                            throw new ElementInjectedException(this.description, file);
+                            reject(new ElementInjectedException(this.description, file));
                         }
                     });
                 }
