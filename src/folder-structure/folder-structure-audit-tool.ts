@@ -5,6 +5,7 @@ import { AppOneClassTest } from './test-cases/app-one-class-test';
 import { AppNumberImportsTest } from './test-cases/app-number-imports-test';
 import { AppModuleImportsTest } from './test-cases/app-module-imports-test';
 import { AppElementsInjectedTest } from './test-cases/app-elements-injected-test';
+import { AppCompodocTest } from './test-cases/app-compodoc-test';
 
 import { IAuditTool } from '../types/i-audit-tool';
 import { IContext } from '../types/i-context';
@@ -20,7 +21,8 @@ export class FolderStructureAuditTool implements IAuditTool {
             new AppOneClassTest(),
             new AppNumberImportsTest(),
             new AppModuleImportsTest(),
-            new AppElementsInjectedTest()
+            new AppElementsInjectedTest(),
+            new AppCompodocTest()
         ];
     }
 
