@@ -8,6 +8,7 @@ import { AppElementsInjectedTest } from './test-cases/app-elements-injected-test
 import { AppCompodocTest } from './test-cases/app-compodoc-test';
 import { AppCypressTest } from './test-cases/app-cypress-test';
 import { AppAdrTest } from './test-cases/app-adr-test';
+import { AppSonarlintTest } from './test-cases/app-sonarlint-test';
 
 import { IAuditTool } from '../types/i-audit-tool';
 import { IContext } from '../types/i-context';
@@ -26,7 +27,8 @@ export class FolderStructureAuditTool implements IAuditTool {
             new AppElementsInjectedTest(),
             new AppCompodocTest(),
             new AppCypressTest(),
-            new AppAdrTest()
+            new AppAdrTest(),
+            new AppSonarlintTest(),
         ];
     }
 
