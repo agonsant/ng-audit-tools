@@ -9,6 +9,7 @@ import { AppCompodocTest } from './test-cases/app-compodoc-test';
 import { AppCypressTest } from './test-cases/app-cypress-test';
 import { AppAdrTest } from './test-cases/app-adr-test';
 import { AppSonarlintTest } from './test-cases/app-sonarlint-test';
+import { AppLazyLoadingTest } from './test-cases/app-lazyLoading-test';
 
 import { IAuditTool } from '../types/i-audit-tool';
 import { IContext } from '../types/i-context';
@@ -29,6 +30,7 @@ export class FolderStructureAuditTool implements IAuditTool {
             new AppCypressTest(),
             new AppAdrTest(),
             new AppSonarlintTest(),
+            new AppLazyLoadingTest(),
         ];
     }
 
