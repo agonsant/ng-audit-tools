@@ -14,12 +14,13 @@ export class AppCypressTest implements ITestCase {
     }
 
     run(context: IContext): Promise<string> {
-        const sourceFolder = path.join(context.getWorkspace(), 'package.json');
+        const workSpace = context.getWorkspace();
+        const sourceFolder = path.join(workSpace, 'package.json');
         return new Promise((resolve, reject) => {
             const packageJson = ToolUtils.getPackageJson(sourceFolder);
             const cypress = packageJson.devDependencies[this.cypressKey]; 
             if (cypress) {
-                resolve();
+               resolve();
             } else {
                 reject(new CypressException(this.description, cypress));
             }
