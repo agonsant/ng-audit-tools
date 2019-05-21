@@ -25,7 +25,7 @@ export class AppModuleImportsTest implements ITestCase {
                 } else {
                     const dirs = files.filter(file => fs.statSync(path.join(sourceFolder, file)).isDirectory());
                     const buffer = fs.readFileSync(appModule, 'utf-8');
-                    let validate = true;
+                    let validate = dirs.length > 0;
                     let index = 0;
                     while (validate && index < dirs.length) {
                         const dir = dirs[index];
