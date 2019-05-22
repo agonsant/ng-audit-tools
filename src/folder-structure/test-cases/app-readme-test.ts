@@ -1,6 +1,7 @@
 import { ITestCase } from '../../types/i-test-case';
 import { IContext } from '../../types/i-context';
 import { ReadmeException } from '../exceptions/readme-exception';
+import {ToolUtils} from '../../utils/tool-utils';
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -17,9 +18,9 @@ export class AppReadmeTest implements ITestCase {
     run(context: IContext): Promise<string> {
         const sourceFolder = path.join(context.getWorkspace(), '/src/app');
         return new Promise((resolve, reject) => {
-            glob(`${sourceFolder}/**/modules/*/**`, (err: any, files: any) => {
+            glob(`${sourceFolder}/modules/**`, (err: any, files: any) => {
 
-                const dirs = files.filter((file: string) => fs.statSync(file).isDirectory() && !file.endsWith('modules'));
+                const dirs = files.filter((file: fs.PathLike) => ToolUtils.isModuleDirectoryPath(file.toString()));
                 if(err) reject(new ReadmeException());
                 let index = 0;
                 let validate = dirs.length > 0;
