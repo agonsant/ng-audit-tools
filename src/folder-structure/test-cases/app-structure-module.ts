@@ -81,17 +81,12 @@ export class AppStructurModule implements ITestCase {
                 this.isValidComponentsStructure(moduleDirectoryPath);
     }
 
-    isModuleDirectoryPath(moduleDirectoryPath: string): boolean {
-        const regExprModules = new RegExp('.*/modules/[^/]+$', 'g');
-        return regExprModules.test(moduleDirectoryPath) && fs.statSync(moduleDirectoryPath).isDirectory();
-    }
-
     run(context: IContext): Promise<string> {
         return new Promise((resolve, reject) => {
             const sourceFolder = path.join(context.getWorkspace(), 'src/app');
             glob(`${sourceFolder}/modules/**/*`, (err: any, files: any) => {
                 if(err) reject(new StructureModuleException());
-                const moduleDirectoryPaths = files.filter((file: fs.PathLike) => this.isModuleDirectoryPath(file.toString()));
+                const moduleDirectoryPaths = files.filter((file: fs.PathLike) => ToolUtils.isModuleDirectoryPath(file.toString()));
                 let validate = moduleDirectoryPaths.length > 0;
                 let index = 0;
                 while(validate && index < moduleDirectoryPaths.length) {

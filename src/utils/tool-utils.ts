@@ -2,6 +2,7 @@ import * as fs from 'fs';
 
 const regExpImporLine = new RegExp('(\s)?import {.*} from \'.*\'(;)?', 'g');
 const regExpLazyLoading = new RegExp('RouterModule\.forChild\(.+\)', 'g');
+const regExprModulesPath = new RegExp('.*/modules/[^/]+$', 'g');
 
 export class ToolUtils {
     constructor() {}
@@ -27,5 +28,9 @@ export class ToolUtils {
         } catch(err) {
             return false;
         }
+    }
+
+    static isModuleDirectoryPath(moduleDirectoryPath: string): boolean {
+        return regExprModulesPath.test(moduleDirectoryPath) && fs.statSync(moduleDirectoryPath).isDirectory();
     }
 }
