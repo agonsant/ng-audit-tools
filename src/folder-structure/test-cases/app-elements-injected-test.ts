@@ -13,24 +13,22 @@ export class AppElementsInjectedTest implements ITestCase {
         this.description = 'Element has not been injected in any module';
     }
 
-    getPathImport(importItem: string): string {
-        const split = importItem.split('from')[1];
-        const splitReplace = split.replace(/(\'|;)/g, '');
-        return splitReplace.trim();
-    }
-
-    getPathImportsModule(modulePath: string): string[] {
+    getImportsPath(modulePath: string): string[] {
         const importsColl = ToolUtils.getImports(modulePath);
-        return importsColl.map(importItem => this.getPathImport(importItem));
+        return importsColl.map(importItem => {
+            const split = importItem.split('from')[1];
+            const splitReplace = split.replace(/(\'|;)/g, '');
+            return splitReplace.trim();
+        });
     }
 
-    foundImportFileInModule(file: string, modulePath: string): any {
-        const pathImports = this.getPathImportsModule(modulePath);
-        const fileWithoutExt = file.replace(/\.ts/g, '');
-        return pathImports.find(url => {
+    foundImportFileInModule(filePath: string, modulePath: string): any {
+        const importsPath = this.getImportsPath(modulePath);
+        const filePathWithoutExt = filePath.replace(/\.ts/g, '');
+        return importsPath.find(url => {
             const splitUrl = url.split('/').filter(element => element !== '.' && element !== '..');
             const joinUrl = splitUrl.join('/');
-            return fileWithoutExt.indexOf(joinUrl) > -1;
+            return filePathWithoutExt.endsWith(joinUrl);
         });
 
     }
@@ -39,23 +37,20 @@ export class AppElementsInjectedTest implements ITestCase {
         const sourceApp = path.join(context.getWorkspace(), 'src/app');
         
         return new Promise((resolve, reject) => {
-            glob(`${sourceApp}/*/**/!(*.spec).ts`, (err: any, files: any) => {
-                if (err) {
-                    reject(new ElementInjectedException());
-                } else {
-                    const modules = glob.sync(`${sourceApp}/**/*.module.ts`);
-                    files.forEach((file: string) => {
-                        let foundImport: any = false;
-                        let index = 0;
-                        while (!foundImport && index < modules.length) {
-                            foundImport = this.foundImportFileInModule(file, modules[index]);
-                            if(!foundImport) index += 1;
-                        }
-                        if (!foundImport) {
-                            reject(new ElementInjectedException(this.description, file));
-                        }
-                    });
-                }
+            glob(`${sourceApp}/*/**/!(*.spec).ts`, (err: any, filesPath: string[]) => {
+                if (err) reject(new ElementInjectedException());
+               
+                const modulesPath = glob.sync(`${sourceApp}/**/*.module.ts`);
+                filesPath.forEach(filePath => {
+                    let foundImport = false;
+                    let index = 0;
+                    while (!foundImport && index < modulesPath.length) {
+                        foundImport = this.foundImportFileInModule(filePath, modulesPath[index]);
+                        if(!foundImport) index += 1;
+                    }
+                    if (!foundImport) reject(new ElementInjectedException(this.description, filePath));
+                });
+                
                 resolve();
             });
         });
