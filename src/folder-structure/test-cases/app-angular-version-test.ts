@@ -12,8 +12,8 @@ export class AppAngularVersionTest implements ITestCase {
     angularPackagePath: string;
 
     constructor() {
-        this.description = 'The angular version should be larger or equal';
         this.versionRequired = 8;
+        this.description = `The angular version should be larger or equal than ${this.versionRequired}`;
         this.angularPackagePath = 'node_modules/@angular/core/package.json';
     }
 
@@ -23,11 +23,8 @@ export class AppAngularVersionTest implements ITestCase {
             const jsonPackage = ToolUtils.getPackageJson(pathPackage);
             const {version} = jsonPackage;
             const currentVersion = version.split('.')[0];
-            if(currentVersion >= this.versionRequired) {
-                resolve();
-            } else {
-                reject(new AngularVersionException(`The angular version is smaller than ${this.versionRequired}`, currentVersion));
-            }
+            const validate = currentVersion >= this.versionRequired; 
+            return validate ? resolve() : reject(new AngularVersionException(this.description, currentVersion));
         });
     }
 
