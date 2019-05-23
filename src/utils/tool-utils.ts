@@ -20,11 +20,10 @@ export class ToolUtils {
         }
     }
 
-    static hasLazyLoading(path: string) {
+    static hasLazyLoading(path: string): boolean {
         try {
             const buffer = fs.readFileSync(path, 'utf-8');
-            const matchsCount = (buffer.match(regExpLazyLoading) || []).length;
-            return matchsCount === 1;
+            return (buffer.match(regExpLazyLoading) || []).length === 1;
         } catch(err) {
             return false;
         }
