@@ -22,7 +22,7 @@ export class AppElementsInjectedTest implements ITestCase {
         });
     }
 
-    foundImportFileInModule(filePath: string, modulePath: string): any {
+    findImportFileInModule(filePath: string, modulePath: string): string | undefined {
         const importsPath = this.getImportsPath(modulePath);
         const filePathWithoutExt = filePath.replace(/\.ts/g, '');
         return importsPath.find(url => {
@@ -45,7 +45,7 @@ export class AppElementsInjectedTest implements ITestCase {
                     let foundImport = false;
                     let index = 0;
                     while (!foundImport && index < modulesPath.length) {
-                        foundImport = this.foundImportFileInModule(filePath, modulesPath[index]);
+                        foundImport = (this.findImportFileInModule(filePath, modulesPath[index]) || '').length > 0;
                         if(!foundImport) index += 1;
                     }
                     if (!foundImport) reject(new ElementInjectedException(this.description, filePath));
