@@ -7,42 +7,45 @@ import { ModuleImportsException } from '../exceptions/module-imports-exception';
 export class AppModuleImportsTest implements ITestCase {
 
     description: string;
-    foldersNoImport: string[];
+    modulesNameToNotImport: string[];
+    modulesNameToImport: string[];
     constructor() {
         this.description = 'App Module must contain the core module and the first level modules and can not contain any shared module';
-        this.foldersNoImport = ['shared'];
+        this.modulesNameToNotImport = ['shared'];
+        this.modulesNameToImport = ['core'];
     }
 
 
     run(context: IContext): Promise<string> {
-        const sourceFolder = path.join(context.getWorkspace(), 'src/app');
-        const appModule = `${sourceFolder}/app.module.ts`;
+        const sourceAppPath = path.join(context.getWorkspace(), 'src/app');
+        const appModulePath = path.join(sourceAppPath, 'app.module.ts');
 
         return new Promise((resolve, reject) => {
-            fs.readdir(sourceFolder, (err, files) => {
-                if (err) {
-                    reject(new ModuleImportsException());
-                } else {
-                    const dirs = files.filter(file => fs.statSync(path.join(sourceFolder, file)).isDirectory());
-                    const buffer = fs.readFileSync(appModule, 'utf-8');
-                    let validate = dirs.length > 0;
-                    let index = 0;
-                    while (validate && index < dirs.length) {
-                        const dir = dirs[index];
-                        const regExp = new RegExp('(\s)?import.*from \'\.\/' + dir + '\/.*', 'g');
-                        const cont = (buffer.match(regExp) || []).length;
-                        validate = this.foldersNoImport.includes(dir) ? cont === 0 : cont > 0;
-                        if(validate) index += 1;
-                    }
-                    
-                    if (validate) {
-                        resolve();
-                    } else if (this.foldersNoImport.includes(dirs[index])){
-                        reject(new ModuleImportsException(`App module must not contain the module ${dirs[index]}`));
-                    } else {
-                        reject(new ModuleImportsException(`App module must contain the module ${dirs[index]}`));
-                    }
+            fs.readdir(sourceAppPath, (err, files) => {
+                if (err) return reject(new ModuleImportsException());
+                
+                const dirs = files.filter(file => fs.statSync(path.join(sourceAppPath, file)).isDirectory());
+                const moduleNameNotFound = this.modulesNameToImport.find(moduleName => !dirs.includes(moduleName));
+                if(moduleNameNotFound){
+                    return reject(new ModuleImportsException(this.description, `Module ${moduleNameNotFound} should be exist in ${sourceAppPath}`));
                 }
+                const buffer = fs.readFileSync(appModulePath, 'utf-8');
+                let validate = dirs.length > 0;
+                let index = 0;
+                while (validate && index < dirs.length) {
+                    const dir = dirs[index];
+                    const regExp = new RegExp('(\s)?import.*from \'\.\/' + dir + '\/.*', 'g');
+                    const cont = (buffer.match(regExp) || []).length;
+                    validate = this.modulesNameToNotImport.includes(dir) ? cont === 0 : cont > 0;
+                    if(validate) index += 1;
+                }
+
+                if(validate) return resolve();
+
+                if (this.modulesNameToNotImport.includes(dirs[index])){
+                    return reject(new ModuleImportsException(this.description, `App module should not contain the module ${dirs[index]}`));
+                }
+                return reject(new ModuleImportsException(this.description, `App module should contain the module ${dirs[index]}`));
             });
         });
     }
