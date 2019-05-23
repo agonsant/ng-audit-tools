@@ -15,15 +15,15 @@ export class AppAdrTest implements ITestCase {
     }
 
     run(context: IContext): Promise<string> {
-        const sourceFolder = path.join(context.getWorkspace(), this.adrFolder);
-        return new Promise(resolve => {
-            const existAdrFolder = fs.existsSync(sourceFolder);
-            if (!existAdrFolder) throw new AdrException(this.description, sourceFolder);
-            fs.readdir(sourceFolder, (err, files) => {
-                if (err) throw new AdrException();
+        const adrPath = path.join(context.getWorkspace(), this.adrFolder);
+        return new Promise((resolve, reject) => {
+            if (!fs.existsSync(adrPath)) return reject(new AdrException(this.description, adrPath));
+            
+            fs.readdir(adrPath, (err, files) => {
+                if (err) return reject(new AdrException());
                 const validate = files.length > 0 && files.every(file => path.extname(file) === this.adrFileExt);
-                if(!validate) throw new AdrException(this.description, sourceFolder); 
-                resolve();
+                if(!validate) return reject(new AdrException(this.description, adrPath)); 
+                return resolve();
             });
         });
     }
