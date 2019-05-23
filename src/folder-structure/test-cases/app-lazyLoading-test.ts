@@ -15,20 +15,20 @@ export class AppLazyLoadingTest implements ITestCase {
     }
 
     run(context: IContext): Promise<string> {
-        const pathBase = path.join(context.getWorkspace(), 'src/app');
-        const appRouterModule = path.join(pathBase, 'app-routing.module.ts');
+        const sourceAppPath = path.join(context.getWorkspace(), 'src/app');
+        const appRoutingModulePath = path.join(sourceAppPath, 'app-routing.module.ts');
         return new Promise((resolve, reject) => {
-            if (!ToolUtils.hasLazyLoading(appRouterModule)) reject(new LazyLoadingException(this.description, appRouterModule));
+            if (!ToolUtils.hasLazyLoading(appRoutingModulePath)) reject(new LazyLoadingException(this.description, appRoutingModulePath));
             
-            glob(`${pathBase}/**/modules/**/*-routing.module.ts`, (err: any, files: any) => {
+            glob(`${sourceAppPath}/**/*-routing.module.ts`, (err: Error, filesPath: string[]) => {
                 if (err) reject(new LazyLoadingException());
                 let index = 0;
-                let validate = true;
-                while (validate && index < files.length) {
-                    if(validate = ToolUtils.hasLazyLoading(files[index])) index += 1;
+                let validate = filesPath.length > 0;
+                while (validate && index < filesPath.length) {
+                    if(validate = ToolUtils.hasLazyLoading(filesPath[index])) index += 1;
                 }
     
-                if (!validate) reject(new LazyLoadingException(this.description, files[index]));
+                if (!validate) reject(new LazyLoadingException(this.description, filesPath[index]));
                 resolve();
             });
             
