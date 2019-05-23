@@ -17,12 +17,8 @@ export class AppCompodocTest implements ITestCase {
         const sourceFolder = path.join(context.getWorkspace(), 'package.json');
         return new Promise((resolve, reject) => {
             const packageJson = ToolUtils.getPackageJson(sourceFolder);
-            const compodoc = packageJson.dependencies[this.compodocKey]; 
-            if (compodoc) {
-                resolve();
-            } else {
-                reject(new CompodocException(this.description, compodoc));
-            }
+            const compodoc = packageJson.dependencies[this.compodocKey];
+            return compodoc ? resolve() : reject(new CompodocException(this.description, compodoc));
         });
     }
 
