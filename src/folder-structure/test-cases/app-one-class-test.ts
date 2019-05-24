@@ -1,46 +1,40 @@
 import { ITestCase } from '../../types/i-test-case';
 import { IContext } from '../../types/i-context';
+import {OneClassException} from '../exceptions/one-class-exception';
+
 import * as fs from 'fs';
 import * as path from 'path';
 let glob = require('glob');
-import {OneClassException} from '../exceptions/one-class-exception';
 
 export class AppOneClassTest implements ITestCase {
 
     description: string;
-    limitClassPerFile: number;
+    limit: number;
     constructor() {
-        this.description = 'A file can not have more than one TypeScript class';
-        this.limitClassPerFile = 1;
-    }
-
-    hasOneClassAsMax(file: string) {
-        const f = fs.readFileSync(file, 'utf-8');
-        const count = (f.match(/class/g) || []).length;
-        return count <= this.limitClassPerFile;
+        this.limit = 1;
+        this.description = `A file can not have more than ${this.limit} TypeScript class`;
     }
 
     run(context: IContext): Promise<string> {
         return new Promise((resolve, reject) => {
-            const sourceFolder = path.join(context.getWorkspace(), 'src/app');
-            const src = `${sourceFolder}/**/*.ts`;
+            const sourceAppPath = path.join(context.getWorkspace(), 'src/app');
             let validate = true; 
-            glob(src, (err: any, files: any) => {
-                if (err) {
-                    reject(new OneClassException());
-                } else {
-                    let i = 0;
-                    while(validate && i < files.length) {
-                        validate = this.hasOneClassAsMax(files[i]);
-                        if (validate) i += 1;
-                    }
-        
-                    if(validate) {
-                        resolve();
-                    } else {
-                        reject(new OneClassException(`The file ${files[i]} has more than ${this.limitClassPerFile} class/es`));
-                    }
+            glob(`${sourceAppPath}/**/*.ts`, (err: Error, files: string[]) => {
+                if (err) return reject(new OneClassException());
+                
+                let index = 0;
+                let classCounter = 0;
+                while(validate && index < files.length) {
+                    const buffer = fs.readFileSync(files[index], 'utf-8');
+                    classCounter = (buffer.match(/(export )?class \w+ (implements \w+ )?\{/g) || []).length;
+                    if (validate = classCounter <= this.limit) {
+                        index += 1;
+                        classCounter = 0;  
+                    } 
                 }
+    
+                if(!validate) return reject(new OneClassException(this.description, files[index], classCounter));
+                return resolve();
             });
 
         });
