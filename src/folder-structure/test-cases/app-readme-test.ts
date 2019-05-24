@@ -20,7 +20,7 @@ export class AppReadmeTest implements ITestCase {
         return new Promise((resolve, reject) => {
             glob(`${sourceAppPath}/modules/**`, (err: Error, filesPath: string[]) => {
 
-                if(err) reject(new ReadmeException());
+                if(err) return reject(new ReadmeException());
                 const dirs = filesPath.filter((filePath: string) => ToolUtils.isModuleDirectoryPath(filePath));
                 let index = 0;
                 let validate = true;
@@ -32,7 +32,7 @@ export class AppReadmeTest implements ITestCase {
                     if(validate = (readmeFileExist && !readmeFileIsEmpty)) index += 1;
                 };
 
-                validate ? resolve() : reject(new ReadmeException(this.description, dirs[index]));
+                return validate ? resolve() : reject(new ReadmeException(this.description, dirs[index]));
             });
         });
     }
