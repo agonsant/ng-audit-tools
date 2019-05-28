@@ -12,7 +12,7 @@ export class AppReadmeTest implements ITestCase {
     description: string;
   
     constructor() {
-        this.description = 'Should to exist Readme.md file by feature module and not be empty';
+        this.description = 'Should to exist README.md file by feature module and not be empty';
     }
 
     run(context: IContext): Promise<string> {
