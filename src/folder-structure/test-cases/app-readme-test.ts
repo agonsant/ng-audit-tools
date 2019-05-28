@@ -25,11 +25,11 @@ export class AppReadmeTest implements ITestCase {
                 let index = 0;
                 let validate = true;
                 while (validate && index < dirs.length) {
-                    const readmePath = path.join(dirs[index], 'Readme.md');
+                    const readmePath = path.join(dirs[index], 'README.md');
                     const readmeFileExist = fs.existsSync(readmePath);
-                    const readmeFileIsEmpty = fs.readFileSync(readmePath, 'utf-8').length === 0;
+                    validate = readmeFileExist && fs.readFileSync(readmePath, 'utf-8').length > 0;
                     
-                    if(validate = (readmeFileExist && !readmeFileIsEmpty)) index += 1;
+                    if(validate) index += 1;
                 };
 
                 return validate ? resolve() : reject(new ReadmeException(this.description, dirs[index]));
