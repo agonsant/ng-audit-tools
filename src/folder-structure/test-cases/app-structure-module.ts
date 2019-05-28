@@ -47,15 +47,19 @@ export class AppStructurModule implements ITestCase {
     }
 
     isImportedIntoParentModule(moduleDirectoryPath: string): boolean {
-        const parentModulePath = path.join(moduleDirectoryPath, '../../');
-        const parentNameModule = path.basename(parentModulePath);
-
+        let parentModulePath = path.join(moduleDirectoryPath, '../../');
+        if(path.basename(parentModulePath) === 'app') {
+            parentModulePath = path.join(parentModulePath, 'modules');
+        }
+        let parentNameModule = path.basename(parentModulePath);
+        
         const nameModule = path.basename(moduleDirectoryPath);
         const relativePath = path.relative(parentModulePath, moduleDirectoryPath);
-
-        const parentFileModulePath = path.join(parentModulePath, `${parentNameModule}.module.ts`);
-        const fileModulePath = path.join(relativePath, `${nameModule}.module.ts`);
         
+        const parentFileModulePath = path.join(parentModulePath, `${parentNameModule}.module.ts`);
+
+        const fileModulePath = path.join(relativePath, `${nameModule}.module.ts`);
+
         if(!fs.existsSync(parentFileModulePath)) return false;
         
         const imports = ToolUtils.getImports(parentFileModulePath);
