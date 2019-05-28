@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 
 const regExpImporLine = new RegExp('(\s)?import {.*} from \'.*\'(;)?', 'g');
-const regExpLazyLoading = new RegExp('RouterModule\.forChild\(.+\)', 'g');
+const regExpLazyLoadingChild = new RegExp('RouterModule\.forChild\(.+\)', 'g');
+const regExpLazyLoadingRoot = new RegExp('RouterModule\.forRoot\(.+\)', 'g');
 const regExprModulesPath = new RegExp('.*/modules/[^/]+$', 'g');
 
 export class ToolUtils {
@@ -23,7 +24,7 @@ export class ToolUtils {
     static hasLazyLoading(path: string): boolean {
         try {
             const buffer = fs.readFileSync(path, 'utf-8');
-            return (buffer.match(regExpLazyLoading) || []).length === 1;
+            return path.endsWith('app-routing.module.ts') ? (buffer.match(regExpLazyLoadingRoot) || []).length === 1 : (buffer.match(regExpLazyLoadingChild) || []).length === 1;
         } catch(err) {
             return false;
         }
