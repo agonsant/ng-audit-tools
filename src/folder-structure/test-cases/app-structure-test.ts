@@ -7,13 +7,14 @@ import { FolderStructureException } from '../exceptions/folder-structure-excepti
 export class AppStructureTest implements ITestCase {
 
     description: string;
-
+    folders: string[];
     constructor() {
         this.description = 'The app folder should only have: core, shared and modules folders';
+        this.folders = ['core', 'shared', 'modules'];
     }
 
     run(context: IContext): Promise<string> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const directoryPath = path.join(context.getWorkspace(), 'src', 'app');
             try {
                 fs.statSync(directoryPath).isDirectory();
@@ -22,11 +23,11 @@ export class AppStructureTest implements ITestCase {
             }
             fs.readdir(directoryPath, (err, files) => {
                 if (err) throw new FolderStructureException(err.message, files ? files.join(' ') : '');
-                if (files.length === 3 && files.includes('core') &&
-                    files.includes('shared') && files.includes('modules')) {
-                    resolve()
+                const dirs = files.filter(file => fs.statSync(path.join(directoryPath, file)).isDirectory());
+                if (dirs.length === this.folders.length && dirs.every(dir => this.folders.includes(dir))) {
+                    resolve();
                 } else {
-                    throw new FolderStructureException(this.description, files.join(' '));
+                    reject(new FolderStructureException(this.description, files.join('\n')));
                 }
             });
         });

@@ -38,6 +38,7 @@
     "glob": "^7.1.4",
     "node-sloc": "^0.1.12",
     "parse-gitignore": "^1.0.1",
-    "require-from-string": "^2.0.2"
+    "require-from-string": "^2.0.2",
+	"find-process": "^1.4.1"
   }
 }
