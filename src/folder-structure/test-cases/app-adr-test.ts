@@ -10,7 +10,7 @@ export class AppAdrTest implements ITestCase {
     adrFileExt: string;
     constructor() {
         this.description = 'Should to exist ADR (Architecture decision record) folder and not be empty';
-        this.adrFolder = 'adr';
+        this.adrFolder = 'docs/adr';
         this.adrFileExt = '.md'
     }
 

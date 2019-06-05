@@ -12,8 +12,8 @@ export class AuditTool {
     constructor(context: IContext) {
         this.context = context;
         this.tools = [
-            // new FolderStructureAuditTool(),
-            new DependenciesGraphAuditTool()
+            new FolderStructureAuditTool(),
+            //new DependenciesGraphAuditTool()
         ]
     }
 
